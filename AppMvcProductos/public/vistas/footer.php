@@ -11,5 +11,6 @@
             <p>Derechos Reservados &copy; 2024</p>
         </footer>
     </div>
+    <script src="../js/miScript.js"></script>
 </body>
 </html>

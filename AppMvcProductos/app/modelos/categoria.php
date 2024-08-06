@@ -14,14 +14,23 @@
         //CRUD - Read, listar ver todos los registros
         public function listar()
         {
-            //crear la cadena SQL para la consulta
-            $cadenaSql = "SELECT * FROM categorias ORDER BY nombre";
-            //guardarmos los datos o los resultados de la consulta, en un arregloasociativo llamado datos. En este caso solo enviamos la consulta sin datos y sin tipo de datos.
+           $cantidadRegistros = 4;
+           // Capturar  la variable llamada "pagina", 
+
+            $pagina = isset($_GET["pagina"]) ? $_GET["pagina"] :  1;
+            $cadenaSql = "SELECT SQL_CALC_FOUND_ROWS * FROM categorias LIMIT " . ($pagina - 1) * $cantidadRegistros . ", {$cantidadRegistros}";
+            echo $cadenaSql;
             $datos = $this->conexion->consultaPreparada($cadenaSql)->fetch_all(MYSQLI_ASSOC);
-            //nos desconectamos de la base de datos.
+
+            $totalRegistros = $this->conexion->consultaPreparada("SELECT FOUND_ROWS() AS totalRegistros")->fetch_row();
+            $totalPaginas = ceil($totalRegistros[0] / $cantidadRegistros);
+            // Mejorar, enviado algunos otros datos como total de registros, total paginas, entre otros para mejorar la páginacion
             $this->conexion->desconectarse();
-            //retornamos el arreglo asociativo.
-            return $datos;
+            return [
+                "totalPaginas" => $totalPaginas,
+                "totalRegistros" => $totalRegistros[0],
+                "registros" => $datos
+            ];
         }
         //listar un solo registro.
         public function listarUno($id)

@@ -32,6 +32,9 @@
             foreach (self::$rutas[$metodo] as $ruta => $funcionCall) {
                 $uri = trim($uri, "/");
 
+                if (strpos($uri, '?')){
+                    $uri = substr($uri,0, strpos($uri, "?"));                }
+
                 // Si hay ':' en la ruta, modificar la ruta
                 if (strpos($ruta, ":")) {
                     // La ruta ahora tiene un subpatrón, que será comparado con la URI
